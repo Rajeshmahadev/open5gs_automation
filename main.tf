@@ -169,7 +169,7 @@ resource "null_resource" "null-res-01" {
 
 terraform {
   backend "s3" {
-    bucket         = "my-tf-test-bucket-open5gs-core-automation"
+    bucket         = "my-tf-test-bucket-open5g-core-automation"
     dynamodb_table = "state-lock-core"
     key            = "global/mystate/terraform.tfstate"
     region         = "us-east-1"
