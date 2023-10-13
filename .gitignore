@@ -29,3 +29,4 @@ terraform.rc
 # Additional files
 terraform.tfstate.backup
 open5gs_new_github_actions/
+

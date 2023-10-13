@@ -165,3 +165,12 @@ resource "null_resource" "null-res-01" {
   depends_on = [aws_instance.ec2-web1]
 }
 
+terraform {
+  backend "s3" {
+    bucket         = "my-tf-test-bucket-open5gs-core-automation"
+    dynamodb_table = "state-lock-core"
+    key            = "global/mystate/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+  }
+}
