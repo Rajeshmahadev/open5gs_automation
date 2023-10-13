@@ -106,20 +106,22 @@ resource "aws_security_group" "SG1" {
     Name = "open5gs-SG1-public"
   }
 }
-# key pair creation
-
-resource "aws_key_pair" "tf-key-pair" {
-  key_name   = "tf-key-pair"
-  public_key = tls_private_key.rsa.public_key_openssh
+# First Key Pair
+resource "aws_key_pair" "tf-key-pair-1" {
+  key_name   = "tf-key-pair-1"
+  public_key = tls_private_key.rsa1.public_key_openssh
 }
-resource "tls_private_key" "rsa" {
+
+resource "tls_private_key" "rsa1" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
-resource "local_file" "tf-key" {
-  content  = tls_private_key.rsa.private_key_pem
-  filename = "tf-key-pair"
+
+resource "local_file" "tf-key-1" {
+  content  = tls_private_key.rsa1.private_key_pem
+  filename = "tf-key-pair-1"
 }
+
 
 #Creating EC2 instant in public subnet2
 
@@ -127,7 +129,7 @@ resource "aws_instance" "ec2-web1" {
   ami                         = "ami-007855ac798b5175e"
   instance_type               = "t2.medium"
   availability_zone           = "us-east-1a"
-  key_name                    = "tf-key-pair"
+  key_name                    = "tf-key-pair-1"
   vpc_security_group_ids      = ["${aws_security_group.SG1.id}"]
   subnet_id                   = aws_subnet.subnet_vpc1_1.id
   associate_public_ip_address = true
@@ -153,7 +155,7 @@ resource "null_resource" "null-res-01" {
     type        = "ssh"
     host        = aws_instance.ec2-web1.public_ip
     user        = "ubuntu"
-    private_key = tls_private_key.rsa.private_key_pem
+    private_key = tls_private_key.rsa1.private_key_pem
   }
 
   provisioner "remote-exec" {
